@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#07100f" />
+  <title>SHADOW PROTOCOL — Blackwater Signal</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%2307100f'/%3E%3Cpath d='M43 16H23l-5 5v8l5 5h17v8H18' fill='none' stroke='%23c8f169' stroke-width='5'/%3E%3C/svg%3E" />
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js"}}
+  </script>
+</head>
+<body>
+  <main id="game">
+    <canvas id="world" aria-label="3D mission environment"></canvas>
+    <div class="film-grain"></div>
+    <div class="vignette"></div>
+    <header class="topbar">
+      <div class="brand"><span class="brand-mark">S</span><span>SHADOW<span class="brand-light"> PROTOCOL</span></span></div>
+      <div class="mission-tag"><i></i> OPERATION NIGHTFALL <span>/</span> 01</div>
+      <button id="pause-top" class="icon-button" aria-label="Pause mission">Ⅱ</button>
+    </header>
+
+    <section id="hud" class="hud hidden" aria-live="polite">
+      <div class="objective-card"><div class="eyebrow"><span class="live-dot"></span> FIELD OBJECTIVE</div><div id="objective-title">Secure the relay</div><div id="objective-sub">Eliminate hostile forces · 0 / 5</div><div class="progress-track"><span id="objective-progress"></span></div></div>
+      <div class="compass"><span>N</span><div class="compass-line"></div><span id="compass-degree">000°</span></div>
+      <div class="radio-caption" id="radio-caption"><span>COMMS //</span> <b>Vega</b><em>“Keep low. We move on your mark.”</em></div>
+      <div class="hit-marker" id="hit-marker">×</div>
+      <div class="damage-flash" id="damage-flash"></div>
+      <div class="center-prompt" id="center-prompt"></div>
+      <div class="weapon-readout"><span id="weapon-name">M4A1 // CQB</span><strong><b id="ammo-now">30</b><small> / <span id="ammo-reserve">120</span></small></strong></div>
+      <div class="health-readout"><div class="health-icon">+</div><div class="health-copy"><span>VITALS</span><strong id="health-value">100</strong></div><div class="health-bar"><i id="health-fill"></i></div></div>
+      <div class="squad-readout"><span class="squad-icon">◆</span><span><b>VEGA</b><small>ASSAULT · COVERING</small></span><i></i></div>
+      <div class="echo-readout"><span>◉</span><div><b>ECHO PULSE</b><small id="echo-status">READY · Q</small></div><div class="echo-meter"><i id="echo-fill"></i></div></div>
+      <div id="scan-banner" class="scan-banner">SIGNAL ECHO // HOSTILES REVEALED</div>
+      <div class="crosshair"><i></i><i></i><i></i><i></i><b></b></div>
+      <div class="desktop-hints">WASD MOVE <span>·</span> MOUSE AIM <span>·</span> Q ECHO <span>·</span> R RELOAD <span>·</span> E INTERACT <span>·</span> ESC PAUSE</div>
+      <div class="mobile-controls" id="mobile-controls">
+        <div class="move-zone"><div id="joystick" class="joystick"><div class="joy-ring"></div><div id="joy-knob" class="joy-knob"></div></div><small>MOVE</small></div>
+        <div class="look-zone" id="look-zone"></div>
+        <div class="mobile-actions">
+          <button id="btn-echo" class="touch-action echo-action"><span>◉</span><small>ECHO</small></button>
+          <button id="btn-aim" class="touch-action aim-action"><span>⊙</span><small>AIM</small></button>
+          <button id="btn-use" class="touch-action use-action"><span>F</span><small>USE</small></button>
+          <button id="btn-crouch" class="touch-action"><span>⌄</span><small>CROUCH</small></button>
+          <button id="btn-jump" class="touch-action"><span>↑</span><small>JUMP</small></button>
+          <button id="btn-reload" class="touch-action"><span>↻</span><small>RELOAD</small></button>
+          <button id="btn-fire" class="fire-button"><span>✦</span><small>FIRE</small></button>
+        </div>
+      </div>
+    </section>
+
+    <section id="screen-title" class="screen title-screen">
+      <div class="title-copy"><div class="eyebrow"><span class="live-dot"></span> CLASSIFIED // TASK FORCE KESTREL</div><h1>SHADOW<br><span>PROTOCOL</span></h1><p class="title-sub">THE SIGNAL WAS NEVER MEANT TO BE FOUND.</p><div class="title-rule"></div><p class="title-desc">A rogue transmission. A city gone dark.<br>One team sent in before dawn.</p><div class="title-buttons"><button id="deploy-button" class="primary-button">DEPLOY TO BLACKWATER <span>↗</span></button><button id="campaign-button" class="text-button">CAMPAIGN FILES <span>＋</span></button></div><div class="platform-note">TACTICAL FPS <span>•</span> SINGLE-PLAYER CAMPAIGN <span>•</span> MOBILE READY</div></div>
+      <div class="title-side"><div class="mission-stamp"><span>01</span><div>MISSION<br><b>BLACKWATER<br>SIGNAL</b></div></div><div class="briefing-line"><i></i><span>INCOMING TRANSMISSION</span></div><p>“A relay station on the coast is broadcasting on a dead frequency. Find out who brought it back online.”</p><div class="briefing-byline">— COMMAND, TASK FORCE KESTREL</div></div>
+      <div class="title-footer"><span>◈ CLASSIFIED OPERATION — AUTHORIZED PERSONNEL ONLY</span><span>BUILD 01.01 <b>●</b></span></div>
+    </section>
+
+    <section id="screen-pause" class="screen modal-screen hidden"><div class="modal-card"><div class="eyebrow">MISSION CONTROL // PAUSED</div><h2>TAKE A BREATH.</h2><p>Blackwater is still out there.</p><button id="resume-button" class="primary-button">RESUME OPERATION <span>↗</span></button><button id="settings-button" class="secondary-button">SETTINGS</button><button id="quit-button" class="text-button">ABORT TO MENU</button></div></section>
+    <section id="screen-settings" class="screen modal-screen hidden"><div class="modal-card"><div class="eyebrow">OPERATOR CONFIGURATION</div><h2>SETTINGS</h2><label class="setting-row"><span>AIM SENSITIVITY <b id="sensitivity-value">1.0×</b></span><input id="sensitivity" type="range" min="0.4" max="2.2" value="1" step="0.1"></label><label class="setting-row"><span>MASTER VOLUME <b id="volume-value">70%</b></span><input id="volume" type="range" min="0" max="100" value="70"></label><button id="settings-back" class="primary-button">BACK TO GAME <span>↗</span></button></div></section>
+    <section id="screen-campaign" class="screen campaign-screen hidden"><div class="campaign-shell"><div class="campaign-heading"><div><div class="eyebrow">TASK FORCE KESTREL // OPERATION DOSSIER</div><h2>THE CAMPAIGN</h2></div><button id="campaign-close" class="icon-button">×</button></div><p class="campaign-intro">Six operations. One signal connecting them all. Your first deployment begins in Blackwater.</p><div class="mission-list" id="mission-list"></div><div class="campaign-bottom"><span>MISSION 01 IS A COMPLETE PLAYABLE OPERATION</span><button id="campaign-deploy" class="primary-button">DEPLOY <span>↗</span></button></div></div></section>
+    <section id="screen-complete" class="screen modal-screen hidden"><div class="modal-card completion-card"><div class="eyebrow"><span class="live-dot"></span> OPERATION BLACKWATER // SECURED</div><div class="complete-emblem">✓</div><h2> SIGNAL SILENCED.</h2><p>The relay is offline. The source is not.</p><div class="mission-stats"><span><b id="stat-kills">05</b> HOSTILES NEUTRALIZED</span><span><b id="stat-time">04:32</b> TIME ON TARGET</span></div><div class="next-mission">NEXT OPERATION <b>02 — GLASS HARBOR</b><small>CAMPAIGN FILE UPDATED</small></div><button id="complete-menu" class="primary-button">RETURN TO BASE <span>↗</span></button></div></section>
+    <section id="screen-fail" class="screen modal-screen hidden"><div class="modal-card"><div class="eyebrow">TASK FORCE KESTREL // SIGNAL LOST</div><h2>OPERATOR DOWN.</h2><p>Vega is still holding the lane. Regroup and try again.</p><button id="fail-retry" class="primary-button">REDEPLOY <span>↗</span></button><button id="fail-menu" class="text-button">RETURN TO BASE</button></div></section>
+    <div id="toast" class="toast"></div>
+  </main>
+  <script type="module" src="./game.js"></script>
+</body>
+</html>
